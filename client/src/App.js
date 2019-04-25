@@ -45,8 +45,8 @@ componentDidMount(){
         <Route exact path="/Location" render={(props) => <Dimension2 renderNew={this.renderNew} handleDimensionBtnClick={this.handleDimensionBtnClick} itemChosen={this.state.itemChosen} dimension2={this.state.dimension2}/>} />
         <Route exact path="/Program" render={(props) => <Dimension3 renderNew={this.renderNew} handleDimensionBtnClick={this.handleDimensionBtnClick} itemChosen={this.state.itemChosen} dimension3={this.state.dimension3}/>}/>
         <Route exact path="/Issue" render={(props) => <Dimension4 renderNew={this.renderNew} handleDimensionBtnClick={this.handleDimensionBtnClick} itemChosen={this.state.itemChosen} dimension4={this.state.dimension4}/>} />
-        <Route exact path="/" component={Menu} />
-        <Route exact path="/home"  component={Dimensions}/>
+        <Route exact path="/menu" component={Menu} />
+        <Route exact path="/"  component={Dimensions}/>
         <Route exact path="/Review" render={(props) => <Review appState={this.state}/>} />
          
       </div>
