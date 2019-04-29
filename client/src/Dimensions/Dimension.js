@@ -2,17 +2,17 @@ import React, { Component } from 'react'
 import { withRouter, BrowserRouter, Route } from "react-router";
 
 
-class Dimension1 extends Component {
+class Dimension extends Component {
   constructor(){
     super()
-    this.displayDimension1 = this.displayDimension1.bind(this)
+    this.displayDimension = this.displayDimension.bind(this)
 
   }
   componentDidMount(){
    
   }
    
-  displayDimension1(){
+  displayDimension(){
     if(this.props.dimension) {
       return <>
                 <h1>{this.props.dimension.dimension}</h1>
@@ -49,11 +49,11 @@ class Dimension1 extends Component {
     return (
       <div>
         
-        {this.displayDimension1()}
+        {this.displayDimension()}
        
         
       </div>
     )
   }
 }
- export default withRouter(Dimension1);
+ export default withRouter(Dimension);

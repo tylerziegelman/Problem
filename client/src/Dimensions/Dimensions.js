@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import Dimension1 from './Dimension1'
+import Dimension from './Dimension'
 import Dimension2 from './Dimension2'
 import Dimension3 from './Dimension3'
 import Dimension4 from './Dimension4'
@@ -135,7 +135,7 @@ toggleLast(e) {
 
 renderComponents(){
     return <>
-                 <Dimension1 dimension={this.state.dimensions[this.state.count]} dimensions={this.state.dimensions} count={this.state.count} toggle={this.toggle}  renderNew={this.renderNew} dimension1={this.state.dimension1}/>
+                 <Dimension dimension={this.state.dimensions[this.state.count]} dimensions={this.state.dimensions} count={this.state.count} toggle={this.toggle}  renderNew={this.renderNew} dimension1={this.state.dimension1}/>
                                </>
 //    if(this.state.selected === 'dim1'){
 //        return <>

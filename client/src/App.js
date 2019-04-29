@@ -5,7 +5,7 @@ import './App.css';
 import axios from 'axios'
 import Menu from './Menu'
 import {BrowserRouter,Route} from 'react-router-dom'
-import Dimension1 from './Dimensions/Dimension1'
+import Dimension from './Dimensions/Dimension'
 import Dimension2 from './Dimensions/Dimension2'
 import Dimension3 from './Dimensions/Dimension3'
 import Dimension4 from './Dimensions/Dimension4'
@@ -41,7 +41,7 @@ componentDidMount(){
     return (
       <BrowserRouter>
       <div className="App">
-      <Route exact path="/Audience" render={(props) => <Dimension1 renderNew={this.renderNew} handleDimensionBtnClick={this.handleDimensionBtnClick} itemChosen={this.state.itemChosen} dimension1={this.state.dimension1}/>} />
+      <Route exact path="/Audience" render={(props) => <Dimension renderNew={this.renderNew} handleDimensionBtnClick={this.handleDimensionBtnClick} itemChosen={this.state.itemChosen} dimension1={this.state.dimension1}/>} />
         <Route exact path="/Location" render={(props) => <Dimension2 renderNew={this.renderNew} handleDimensionBtnClick={this.handleDimensionBtnClick} itemChosen={this.state.itemChosen} dimension2={this.state.dimension2}/>} />
         <Route exact path="/Program" render={(props) => <Dimension3 renderNew={this.renderNew} handleDimensionBtnClick={this.handleDimensionBtnClick} itemChosen={this.state.itemChosen} dimension3={this.state.dimension3}/>}/>
         <Route exact path="/Issue" render={(props) => <Dimension4 renderNew={this.renderNew} handleDimensionBtnClick={this.handleDimensionBtnClick} itemChosen={this.state.itemChosen} dimension4={this.state.dimension4}/>} />
