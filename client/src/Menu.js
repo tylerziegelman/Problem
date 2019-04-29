@@ -65,7 +65,7 @@ handleAdd(e) {
 renderSelectedValues(){
     if(selectionsArray.length){
         
-       return this.state.btnSelections.map((btn)=>{
+       return (selectionsArray||[]).map((btn)=>{
            
                return  <button onClick={this.handleRemove}>
                            {btn}

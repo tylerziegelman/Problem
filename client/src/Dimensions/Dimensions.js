@@ -13,7 +13,7 @@ let buttonArr = []
 export default class Dimensions extends Component {
     constructor(){
         super()
-        this.state = {dimension1: []}
+        this.state = {dimension1: [], dimensions: []}
         this.renderNew = this.renderNew.bind(this)
         this.toggle = this.toggle.bind(this)
         this.toggleNext = this.toggleNext.bind(this)
@@ -27,8 +27,10 @@ export default class Dimensions extends Component {
         axios.get('/getData').then((response)=>{
             
             this.setState({
+                
+                count: 0,
                 dimensions: response.data.dimensions,
-                dimension1: [response.data.dimensions[0]],
+                
                 dimension2: [response.data.dimensions[1]],
                 dimension3: [response.data.dimensions[2]],
                 dimension4: [response.data.dimensions[3]],
@@ -48,7 +50,7 @@ export default class Dimensions extends Component {
        
         //  buttonArr.splice(index,1)
          buttonArr[index]=undefined
-         
+        
          if(index===0){
              this.setState({selected:'dim1'})
          }else if (index===1){
@@ -63,13 +65,13 @@ export default class Dimensions extends Component {
               buttonSelections: buttonArr
           })
         }
-        console.log(this.state.buttonSelections)
+
         
     }
 
   renderNew(){
    let buttonArrFiltered = [...(new Set(buttonArr))]
-    return (buttonArrFiltered).map((text)=>{
+    return (buttonArrFiltered || []).map((text)=>{
         console.log(text)
         return <h3><a onClick={this.spliceSelection}>{text}</a>&#10006;</h3>})
 
@@ -105,9 +107,21 @@ addToArr(e){
    // })
     
 }
-toggle(e){
-    this.addToArr(e)
-    this.setState({selected: 'dim2',buttonSelections: buttonArr})
+toggle(e, id){
+    
+    if(this.state.count < 4){
+        console.log(this.state.count += 1)
+        this.setState({count: this.state.count++})
+    }
+    // this.addToArr(e)
+    // (this.state.dimensions||[]).forEach((dimension,id=0)=>{
+    //     console.log(id++)
+    // })
+    // if(this.state.dimensions.length){
+    // for(let i = 0; i<=this.state.dimensions.length;){
+    //     console.log(i)
+    // }
+    //this.setState({selected: 'dim2',buttonSelections: buttonArr})
 }
 toggleNext(e) {
     this.addToArr(e)
@@ -120,23 +134,33 @@ toggleLast(e) {
 }
 
 renderComponents(){
-   if(this.state.selected === 'dim1'){
-       return <>
-                 <Dimension1 toggle={this.toggle}  renderNew={this.renderNew} dimension1={this.state.dimension1}/>
-              </>
-   }else if(this.state.selected === 'dim2') {
-        return <>
-                 <Dimension2 toggle={this.toggleNext} className='displayed' renderNew={this.renderNew} dimension2={this.state.dimension2}/>
-             </>
-   }else if(this.state.selected === 'dim3') {
     return <>
-                <Dimension3 toggle={this.toggleLast} renderNew={this.renderNew} dimension3={this.state.dimension3}/>
-          </>
-   }else if(this.state.selected==='dim4'){
-    return <>
-                <Dimension4 toggle={this.toggleLast} renderNew={this.renderNew} dimension4={this.state.dimension4}/>
-             </>
-   }else {return}
+                 <Dimension1 dimension={this.state.dimensions[this.state.count]} dimensions={this.state.dimensions} count={this.state.count} toggle={this.toggle}  renderNew={this.renderNew} dimension1={this.state.dimension1}/>
+                               </>
+//    if(this.state.selected === 'dim1'){
+//        return <>
+//                  <Dimension1 dimensions={this.state.dimensions} counter={this.state.count} toggle={this.toggle}  renderNew={this.renderNew} dimension1={this.state.dimension1}/>
+//               </>
+//    }else if(this.state.selected === 'dim2') {
+//         return <>
+//                  <Dimension1 dimensions={this.state.dimensions} toggle={this.toggle}   renderNew={this.renderNew} dimension1={this.state.dimension1}/>
+//                  <Dimension2 toggle={this.toggleNext} className='displayed' renderNew={this.renderNew} dimension2={this.state.dimension2}/>
+                
+//              </>
+//    }else if(this.state.selected === 'dim3') {
+//     return <>
+//                  <Dimension1 toggle={this.toggle}  renderNew={this.renderNew} dimension1={this.state.dimension1}/>
+//                  <Dimension2 toggle={this.toggleNext} className='displayed' renderNew={this.renderNew} dimension2={this.state.dimension2}/>
+//                 <Dimension3 toggle={this.toggleLast} renderNew={this.renderNew} dimension3={this.state.dimension3}/>
+//           </>
+//    }else if(this.state.selected==='dim4'){
+//     return <>
+//                 <Dimension1 toggle={this.toggle}  renderNew={this.renderNew} dimension1={this.state.dimension1}/>
+//                  <Dimension2 toggle={this.toggleNext} className='displayed' renderNew={this.renderNew} dimension2={this.state.dimension2}/>
+//                 <Dimension3 toggle={this.toggleLast} renderNew={this.renderNew} dimension3={this.state.dimension3}/>
+//                 <Dimension4 toggle={this.toggleLast} renderNew={this.renderNew} dimension4={this.state.dimension4}/>
+//              </>
+//    }else {return}
     
 }
 
