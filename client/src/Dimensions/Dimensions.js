@@ -3,11 +3,10 @@ import axios from 'axios'
 import Dimension from './Dimension'
 import './Dimensions.css'
 
-let selectedArray = []
 export default class Dimensions extends Component {
     constructor(){
         super()
-        this.state = {dimensions: [],count: null}
+        this.state = {dimensions: [],count: null, newSelect: '',selectedArray: [] }
         this.lastSelectedToArray=this.lastSelectedToArray.bind(this)
         this.toggleDimension = this.toggleDimension.bind(this)
         this.renderComponents = this.renderComponents.bind(this)
@@ -20,51 +19,58 @@ export default class Dimensions extends Component {
             this.setState({ 
                 dimensions: response.data.dimensions,
                 count: 0,
-                newSelect: ''  
+                
             })
         })
     }
 
-    lastSelectedToArray(e){
-        if(this.state.count && selectedArray.length <= 4){
-        selectedArray.push([this.state.newSelect, this.state.dimensions[this.state.count-1]])
+    lastSelectedToArray(){
+       
+        if(this.state.count && this.state.selectedArray.length < 4){
+            this.state.selectedArray.push([this.state.newSelect, this.state.dimensions[this.state.count-1]])
         
         }  
 
     } 
 
     mapSelections(){
-        let selectedArrayNoDuplicates = [];
-        let dupes = {};
-        for(let i = 0, l = selectedArray.length; i < l; i++) {
-            let elementsStringified = JSON.stringify(selectedArray[i]);
-            if(dupes[elementsStringified]) { continue; }
-            selectedArrayNoDuplicates.push(selectedArray[i]);
-            dupes[elementsStringified] = true;
-        }
-        console.log(selectedArrayNoDuplicates)
         
-       
+        let selectedArrayNoDuplicates = []
+        let dupes = {}
+        for(let i = 0, l = this.state.selectedArray.length; i < l; i++) {
+            if(dupes[this.state.selectedArray[i]]) { continue }
+            selectedArrayNoDuplicates.push(this.state.selectedArray[i])
+            dupes[this.state.selectedArray[i]] = true
+        }
+        
         return (selectedArrayNoDuplicates||[]).map((selected)=>{
-        return <><a onClick={this.goBackToDimension}>{selected[0]}</a><br/></>
+        return <><p><a onClick={this.goBackToDimension}>{selected[0]}</a></p></>
         })
         
     }
 
     goBackToDimension(e){
-        let mappedArray = [...(new Set(selectedArray))]
+        
+        let selectedArrayNoDuplicates = [];
+        let dupes = {};
+
+        for(let i = 0, l = this.state.selectedArray.length; i < l; i++) {
+            if(dupes[this.state.selectedArray[i]]) { continue }
+            selectedArrayNoDuplicates.push(this.state.selectedArray[i])
+            dupes[this.state.selectedArray[i]] = true
+        }
+       
         let clicked = e.target.innerHTML
-        for(var i = 0; i< mappedArray.length; i++){
-            for(var j = 0; j<mappedArray[i].length;j++){
-                if(mappedArray[i][j]===clicked.trim()){
-                    console.log(mappedArray[i][1])
-                    selectedArray[i][j]=null
-                    this.setState({count: mappedArray[i][1].id-1})
+        for(var i = 0; i< selectedArrayNoDuplicates.length; i++){
+            for(var j = 0; j<selectedArrayNoDuplicates[i].length;j++){
+                if(selectedArrayNoDuplicates[i][j]===clicked.trim()){
+                    //delete gives error when mappeddimensions() tries to pull 0
+                    //delete this.state.selectedArray[i]
                    
-                   
+                     selectedArrayNoDuplicates[i][j]=null
+                    this.setState({count: selectedArrayNoDuplicates[i][1].id-1})
                 }
             }
-         console.log(mappedArray)
          }
         // selectedArray.forEach((el)=>{
         //     if(el[0] === clicked.trim()){
@@ -74,7 +80,7 @@ export default class Dimensions extends Component {
         //     })  
     }
     
-    toggleDimension(e, id){
+    toggleDimension(e){
         if(this.state.count < 4){
             this.setState({
                 count: this.state.count+=1, 
@@ -83,10 +89,11 @@ export default class Dimensions extends Component {
                 
             })
         }
-        for(var i = 0; i< selectedArray.length; i++){
-            for(var j = 0; j<selectedArray[i].length;j++){
-                if(selectedArray[i][j]===null){
-                   selectedArray[i][j]=e.target.innerHTML
+        for(var i = 0; i< this.state.selectedArray.length; i++){
+            for(var j = 0; j<this.state.selectedArray[i].length;j++){
+                if(this.state.selectedArray[i][j]===null){
+                   
+                   this.state.selectedArray[i][j]=e.target.innerHTML
                    
                 }
             }
@@ -95,11 +102,10 @@ export default class Dimensions extends Component {
     }
     renderComponents(){
         return <>
-                     <Dimension  dimension={this.state.dimensions[this.state.count]} dimensions={this.state.dimensions} count={this.state.count} toggle={this.toggleDimension}/>
+                    <Dimension  dimension={this.state.dimensions[this.state.count]} dimensions={this.state.dimensions} count={this.state.count} toggle={this.toggleDimension}/>
                 
                 </>
     }
-  
 
   render() {
     {this.lastSelectedToArray()}
