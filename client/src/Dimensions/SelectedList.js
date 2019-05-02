@@ -1,5 +1,8 @@
+//intital though process was to use this comp to render the selected items
+//due to react only passing data down I needed to use a parent comp
 import React, { Component } from 'react'
 let selectedArray = []
+
 export default class SelectedList extends Component {
     constructor(){
         super()

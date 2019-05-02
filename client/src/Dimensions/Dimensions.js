@@ -15,6 +15,7 @@ export default class Dimensions extends Component {
         
     }
     componentDidMount(){
+        //api call is made after intial render method is called
         axios.get('/getData').then((response)=>{
             this.setState({ 
                 dimensions: response.data.dimensions,
@@ -25,7 +26,7 @@ export default class Dimensions extends Component {
     }
 
     lastSelectedToArray(){
-       
+       //adds to array if selected array is in bounds of dimensions
         if(this.state.count && this.state.selectedArray.length < 4){
             this.state.selectedArray.push([this.state.newSelect, this.state.dimensions[this.state.count-1]])
         
@@ -34,7 +35,8 @@ export default class Dimensions extends Component {
     } 
 
     mapSelections(){
-        
+        //takes selectedArray and removes duplicates if selection is made 2x
+        //maybe do something like this to find duplicate dimensions and remove them
         let selectedArrayNoDuplicates = []
         let dupes = {}
         for(let i = 0, l = this.state.selectedArray.length; i < l; i++) {
@@ -42,7 +44,7 @@ export default class Dimensions extends Component {
             selectedArrayNoDuplicates.push(this.state.selectedArray[i])
             dupes[this.state.selectedArray[i]] = true
         }
-        
+        //display the user selections on the page
         return (selectedArrayNoDuplicates||[]).map((selected)=>{
         return <><p><a onClick={this.goBackToDimension}>{selected[0]}</a></p></>
         })
@@ -50,7 +52,7 @@ export default class Dimensions extends Component {
     }
 
     goBackToDimension(e){
-        
+        //remove duplicates
         let selectedArrayNoDuplicates = [];
         let dupes = {};
 
@@ -59,7 +61,7 @@ export default class Dimensions extends Component {
             selectedArrayNoDuplicates.push(this.state.selectedArray[i])
             dupes[this.state.selectedArray[i]] = true
         }
-       
+       //if displayed selection is made set item to null and move back to its dimension
         let clicked = e.target.innerHTML
         for(var i = 0; i< selectedArrayNoDuplicates.length; i++){
             for(var j = 0; j<selectedArrayNoDuplicates[i].length;j++){
@@ -81,6 +83,7 @@ export default class Dimensions extends Component {
     }
     
     toggleDimension(e){
+        //add one to count to change the dimension displayed
         if(this.state.count < 4){
             this.setState({
                 count: this.state.count+=1, 
@@ -89,6 +92,7 @@ export default class Dimensions extends Component {
                 
             })
         }
+        //if item is null replace item with next selected item
         for(var i = 0; i< this.state.selectedArray.length; i++){
             for(var j = 0; j<this.state.selectedArray[i].length;j++){
                 if(this.state.selectedArray[i][j]===null){
