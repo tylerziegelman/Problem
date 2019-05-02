@@ -1,149 +1,81 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import Dimension from './Dimension'
-
 import './Dimensions.css'
 
-let buttonArr = []
 let selectedArray = []
-let helper = []
 export default class Dimensions extends Component {
     constructor(){
         super()
         this.state = {dimensions: [],count: null}
         this.lastSelectedToArray=this.lastSelectedToArray.bind(this)
-        this.toggle = this.toggle.bind(this)
+        this.toggleDimension = this.toggleDimension.bind(this)
         this.renderComponents = this.renderComponents.bind(this)
-       this.mapIt = this.mapIt.bind(this)
+        this.mapSelections = this.mapSelections.bind(this)
         this.goBackToDimension = this.goBackToDimension.bind(this)
         
-        this.storeAndReplace = this.storeAndReplace.bind(this)
     }
-
     componentDidMount(){
         axios.get('/getData').then((response)=>{
-            
-            this.setState({
-                
-                
+            this.setState({ 
                 dimensions: response.data.dimensions,
                 count: 0,
-                dimension1: [response.data.dimensions[0]],
-                dimension2: [response.data.dimensions[1]],
-                dimension3: [response.data.dimensions[2]],
-                dimension4: [response.data.dimensions[3]],
-                itemChosen: true,
-                selected: 'dim1',
-                newSelect: ''
-                // selected: [{dim1: true},{dim2:false},{dim3:false},{dim4: false}],
-                // disabled: false,
-                // btnSelections: selectionsArray
-               
+                newSelect: ''  
             })
         })
     }
 
-    
-
-lastSelectedToArray(e){
-    let newer = null
-    if(this.state.count && selectedArray.length !== 4){
-    selectedArray.push([this.state.newSelect, this.state.dimensions[this.state.count-1]])
-    console.log(selectedArray)
-    return selectedArray.map((el)=>{
-        return el.map((ex)=>{
-            if(ex === '' || ex === undefined) {
-                let index = el.indexOf(ex)
-                el.splice(index,2)   
-            }  
-        })
-     })  
-   }  
-  
-  } 
-
-
-mapIt(){
-   
-    return (selectedArray||[]).map((eX)=>{
+    lastSelectedToArray(e){
+        if(this.state.count && selectedArray.length <= 4){
+        selectedArray.push([this.state.newSelect, this.state.dimensions[this.state.count-1]])
         
-        return <><a onClick={this.goBackToDimension}>{eX[0]}</a><br/></>
-    })
+        }  
+
+    } 
+
+    mapSelections(){
+        let selectedArrayNoDuplicates = [];
+        let dupes = {};
+        for(let i = 0, l = selectedArray.length; i < l; i++) {
+            let elementsStringified = JSON.stringify(selectedArray[i]);
+            if(dupes[elementsStringified]) { continue; }
+            selectedArrayNoDuplicates.push(selectedArray[i]);
+            dupes[elementsStringified] = true;
+        }
+        console.log(selectedArrayNoDuplicates)
+        
+       
+        return (selectedArrayNoDuplicates||[]).map((selected)=>{
+        return <><a onClick={this.goBackToDimension}>{selected[0]}</a><br/></>
+        })
+        
     }
 
     goBackToDimension(e){
+        let mappedArray = [...(new Set(selectedArray))]
         let clicked = e.target.innerHTML
-        
-       selectedArray.forEach((el)=>{
-        
-       
-           // console.log(e.target.innerHTML)
-            if(el[0] === clicked.trim()){
-               
-                el[0]=null
-                this.setState({count: el[1].id-1})
-                
-        //       let kk =  el.filter((em)=>{
-        //           return  em !== this.state.newSelect
-        //         })        
-        // console.log(kk)
-               
-                
-            } 
-           
-            // if(selectedArray.length === 4){
-            //     helper.push([this.state.newSelect])
-            //      //this.setState({overflow: [...selectedArray, e.target.innerHTML]})
-            //     }
-            //     if(helper.length > 2) {
-            //       el.splice(0,1,helper.pop())
-            //     }
-         
-       })
-       
-       {this.storeAndReplace(e)}
+        for(var i = 0; i< mappedArray.length; i++){
+            for(var j = 0; j<mappedArray[i].length;j++){
+                if(mappedArray[i][j]===clicked.trim()){
+                    console.log(mappedArray[i][1])
+                    selectedArray[i][j]=null
+                    this.setState({count: mappedArray[i][1].id-1})
+                   
+                   
+                }
+            }
+         console.log(mappedArray)
+         }
+        // selectedArray.forEach((el)=>{
+        //     if(el[0] === clicked.trim()){
+        //         this.setState({count: el[1].id-1})
+        //         el[0] = null  
+        //     } 
+        //     })  
     }
-    storeAndReplace(e){
-        let newer = null
-        // if(selectedArray.length === 4){
-        //     helper.push(this.state.newSelect)
-        //      //this.setState({overflow: [...selectedArray, e.target.innerHTML]})
-        //     }
-        //     if(helper.length > 2){
-        //        newer = helper.pop()
-                
-        //      }
-             console.log(newer)
-            
-             selectedArray.forEach((el)=>{
-        
-       
-                 console.log(el.indexOf(null))
-                 if(el[0]===null){
-                     el[0]='help me'
-                    console.log('im null')
-                 }
-             //       let kk =  el.filter((em)=>{
-             //           return  em !== this.state.newSelect
-             //         })        
-             // console.log(kk)
-                    
-                     
-                 } 
-
-        //   let index = selectedArray.indexOf(e.target)
-        //  delete selectedArray[index]
-        //  let tar = e.target.innerHTML.trim()
-         
-         
-        //    el.splice(0,1,e.target.innerHTML)
-      
-             )
-    }
-
-    toggle(e, id){
     
-        if(this.state.count !== 4){
+    toggleDimension(e, id){
+        if(this.state.count < 4){
             this.setState({
                 count: this.state.count+=1, 
                 target: e.target, 
@@ -151,32 +83,31 @@ mapIt(){
                 
             })
         }
-     
+        for(var i = 0; i< selectedArray.length; i++){
+            for(var j = 0; j<selectedArray[i].length;j++){
+                if(selectedArray[i][j]===null){
+                   selectedArray[i][j]=e.target.innerHTML
+                   
+                }
+            }
+         
+         }
     }
-
     renderComponents(){
-        
         return <>
-                     <Dimension  dimension={this.state.dimensions[this.state.count]} dimensions={this.state.dimensions} count={this.state.count} toggle={this.toggle} lastSelected={this.state.newSelect} dimension1={this.state.dimension1}/>
-                     
+                     <Dimension  dimension={this.state.dimensions[this.state.count]} dimensions={this.state.dimensions} count={this.state.count} toggle={this.toggleDimension}/>
+                
                 </>
-    
     }
   
 
   render() {
     {this.lastSelectedToArray()}
-   
     return (
-        
       <div>
-       
-        
-       
-        {this.mapIt()}
+        {this.mapSelections()}
         {this.renderComponents()}
       </div>
-      
     )
   }
 }
